@@ -121,7 +121,8 @@ function setMode(btn,mode){
 function adjust(v){
  v=Number(v);
  document.getElementById('airVal').innerText=v+'%';
- document.getElementById('fill').style.width=v+'%';
+ const fill=document.getElementById('fill');
+ if(fill) fill.style.width=v+'%';
  document.getElementById('energyUse').innerText=(0.04+v*0.004).toFixed(2)+' kWh';
 }
 function setEnergy(){ const v=document.getElementById('airRange').value; document.getElementById('energyLevel').innerText=v+'%'; }
