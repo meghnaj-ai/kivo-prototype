@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KIVO Interactive Prototype</title>
+<style>
+:root{--bg:#f5f7f6;--card:#fff;--ink:#15201d;--muted:#71807b;--accent:#1f8f78;--line:#e4e9e7;--soft:#eaf5f1}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+.app{max-width:430px;margin:auto;min-height:100vh;padding-bottom:82px}header{padding:24px 20px 10px;display:flex;justify-content:space-between}
+.logo{font-size:26px;font-weight:800;letter-spacing:2px}.status{font-size:10px;color:var(--muted)}
+.screen{display:none;padding:12px 20px}.screen.active{display:block}.hero{padding:20px 4px 12px}
+.eyebrow{font-size:11px;letter-spacing:1.4px;color:var(--accent);font-weight:bold}h1{font-size:31px;margin:8px 0}h2{font-size:21px;margin:5px 0 14px}
+p{color:var(--muted);line-height:1.5;font-size:14px}.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 8px 24px #1428230b}
+.big{font-size:38px;font-weight:800}.unit{font-size:14px;color:var(--muted)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{padding:15px;border-radius:16px;background:var(--soft)}.label{font-size:11px;color:var(--muted);margin-bottom:5px}.value{font-size:20px;font-weight:bold}
+button{border:0;border-radius:14px;padding:13px;font-weight:bold;cursor:pointer}.primary{background:var(--ink);color:#fff;width:100%;margin-top:8px}
+.secondary{background:var(--soft);color:var(--ink);width:100%}.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}.activeMode{outline:3px solid #bfe3d8;background:#dff1eb}
+.state{font-size:12px;font-weight:bold;margin-top:10px}.on{color:var(--accent)}.off{color:var(--muted)}
+.slider{width:100%;accent-color:var(--accent);margin:14px 0}.range{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+.row{display:flex;justify-content:space-between;margin:10px 0;font-size:13px}.success{color:var(--accent)}.energy{font-size:34px;font-weight:800}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(430px,100%);background:#fff;border-top:1px solid var(--line);display:flex;z-index:5}
+.nav{flex:1;background:transparent;color:var(--muted);font-size:10px}.nav.active{color:var(--accent)}
+.product{height:160px;border-radius:24px;background:linear-gradient(145deg,#e8efed,#fff);display:flex;align-items:center;justify-content:center}
+.device{width:110px;height:132px;border-radius:27px;background:#fafcfc;border:2px solid #cbd6d2;position:relative;box-shadow:0 18px 35px #0002}
+.device:before{content:"K";position:absolute;top:38px;left:0;right:0;text-align:center;font-size:29px;font-weight:bold}
+.device:after{content:"";position:absolute;bottom:17px;left:31px;width:48px;height:4px;border-radius:5px;background:var(--accent)}
+</style></head><body><div class="app">
+<header><div class="logo">KIVO</div><div class="status">● KIVO ONE CONNECTED</div></header>
+
+<section id="welcome" class="screen active"><div class="hero"><div class="eyebrow">PERSONAL COMFORT, REIMAGINED</div><h1>Comfort where you need it.</h1><p>KIVO creates a personalized micro-climate around the user instead of conditioning an entire space.</p></div>
+<div class="product"><div class="device"></div></div><div class="card"><div class="label">CONNECTED DEVICE</div><h2>KIVO One</h2><p>Your phone controls the dedicated KIVO One device.</p><button class="primary" onclick="go('home')">Enter KIVO</button></div></section>
+
+<section id="home" class="screen"><div class="hero"><div class="eyebrow">KIVO ONE • CONNECTED</div><h1>Your space, at a glance.</h1></div>
+<div class="card"><div class="label">CURRENT COMFORT</div><div class="big"><span id="homeTemp">28°</span><span class="unit">C</span></div><div id="homeState" class="state"></div></div>
+<div class="grid"><div class="metric"><div class="label">HUMIDITY</div><div id="homeHumidity" class="value">68%</div></div>
+<div class="metric"><div class="label">AIR QUALITY</div><div id="homeAQ" class="value">Good</div></div>
+<div class="metric"><div class="label">AIRFLOW</div><div id="homeAir" class="value">45%</div></div>
+<div class="metric"><div class="label">NOISE</div><div id="homeNoise" class="value">Low</div></div></div>
+<div class="card"><div class="label">COMFORT MODES</div><div class="mode"><button id="comfortBtn" class="secondary" onclick="setMode('Comfort')">Comfort</button><button id="focusBtn" class="secondary" onclick="setMode('Focus')">Focus</button></div><div id="modeSummary" class="state"></div></div>
+<div class="card"><div class="label">SMART INSIGHT</div><h2 id="homeInsightTitle">Comfort Mode is active.</h2><p id="homeInsightText">Balanced airflow is being used for everyday comfort.</p></div>
+<div class="card"><div class="label">LIVE ENVIRONMENT</div><div class="row"><span>Temperature</span><b id="homeTempRow">28°C</b></div><div class="row"><span>Humidity</span><b id="homeHumidityRow">68%</b></div><div class="row"><span>Air quality</span><b id="homeAQRow" class="success">Good</b></div><div class="row"><span>Device</span><b class="success">Online</b></div></div></section>
+
+<section id="control" class="screen"><div class="hero"><div class="eyebrow">KIVO CONTROL</div><h1>Personalize your comfort.</h1></div>
+<div class="card"><div class="label">ACTIVE MODE</div><h2 id="controlMode">Comfort Mode</h2><p id="controlText">Balanced airflow designed for everyday comfort.</p><div id="controlState" class="state"></div></div>
+<div class="card"><div class="label">AIRFLOW INTENSITY</div><div class="energy" id="airVal">45%</div><input id="airSlider" class="slider" type="range" min="0" max="100" value="45" step="1" oninput="setAirflow(this.value)"><div class="range"><span>0%</span><span>50%</span><span>100%</span></div><p>Drag to any exact value from 0% to 100%.</p></div>
+<div class="card"><div class="label">CONNECTED DEVICE</div><div class="row"><span>KIVO One</span><b class="success">● Online</b></div><div class="row"><span>Current mode</span><b id="deviceMode">Comfort</b></div><div class="row"><span>Airflow output</span><b id="deviceAir">45%</b></div><div class="row"><span>Noise level</span><b id="deviceNoise">Low</b></div></div></section>
+
+<section id="energyScreen" class="screen"><div class="hero"><div class="eyebrow">ENERGY MONITOR</div><h1>Comfort with awareness.</h1><p>KIVO estimates energy use based on the selected mode and airflow level. Prototype values are illustrative.</p></div>
+<div class="card"><div class="label">ESTIMATED CURRENT POWER</div><div class="energy" id="energyNow">0.18 kWh/h</div><p id="energyDescription">Comfort Mode • 45% airflow</p></div>
+<div class="card"><div class="label">LIVE SETTINGS</div><div class="row"><span>Mode</span><b id="energyMode">Comfort</b></div><div class="row"><span>Airflow</span><b id="energyAir">45%</b></div><div class="row"><span>Estimated use</span><b id="energyUse">0.18 kWh/h</b></div></div>
+<div class="card"><div class="label">SMART INSIGHT</div><h2 id="energyInsight">Comfort Mode is active.</h2><p id="energyInsightText">Balanced airflow is being used for everyday comfort.</p></div></section>
+
+<section id="about" class="screen"><div class="hero"><div class="eyebrow">ABOUT KIVO</div><h1>A micro-climate, not a whole room.</h1></div>
+<div class="card"><h2>How it works</h2><p><b>Sense</b> → reads local conditions<br><b>Analyse</b> → identifies comfort settings<br><b>Adjust</b> → controls personalized airflow<br><b>Connect</b> → keeps the app and KIVO One synchronized</p></div>
+<div class="card"><h2>Environmental Monitoring</h2><p>Temperature • Humidity • Air Quality • Airflow • Energy Estimate</p></div>
+<div class="card"><h2>KIVO One</h2><p>Compact form factor • environmental monitoring • adjustable airflow • connected digital control</p></div></section>
+
+<nav class="bottom"><button id="nHome" class="nav active" onclick="go('home')">HOME</button><button id="nControl" class="nav" onclick="go('control')">CONTROL</button><button id="nEnergy" class="nav" onclick="go('energyScreen')">ENERGY</button><button id="nAbout" class="nav" onclick="go('about')">ABOUT</button></nav>
+</div>
+
+<script>
+let mode='Comfort', air=45;
+const profiles={
+Comfort:{temp:28,humidity:68,aq:'Good',defaultAir:45,insight:'Comfort Mode is active.',text:'Balanced airflow is being used for everyday comfort.',control:'Balanced airflow designed for everyday comfort.'},
+Focus:{temp:27,humidity:65,aq:'Good',defaultAir:30,insight:'Focus Mode is active.',text:'KIVO is prioritizing quieter airflow for concentrated work.',control:'Quieter, gentler airflow designed for concentrated work.'}
+};
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));const m={home:'nHome',control:'nControl',energyScreen:'nEnergy',about:'nAbout'}[id];if(m)document.getElementById(m).classList.add('active');update();}
+function setMode(m){mode=m;air=profiles[m].defaultAir;update();}
+function setAirflow(v){air=Number(v);update();}
+function noise(){if(mode==='Focus'){return air<=50?'Very Low':air<=75?'Low':'Moderate';}return air<=60?'Low':air<=80?'Moderate':'Higher';}
+function energy(){return (mode==='Comfort'?0.10:0.07+(air/100)*0.18).toFixed(2);}
+function update(){
+ const p=profiles[mode], n=noise(), e=energy();
+ document.getElementById('comfortBtn').classList.toggle('activeMode',mode==='Comfort');
+ document.getElementById('focusBtn').classList.toggle('activeMode',mode==='Focus');
+ document.getElementById('homeTemp').textContent=p.temp+'°';
+ document.getElementById('homeHumidity').textContent=p.humidity+'%';
+ document.getElementById('homeAQ').textContent=p.aq;
+ document.getElementById('homeAir').textContent=air+'%';
+ document.getElementById('homeNoise').textContent=n;
+ document.getElementById('homeTempRow').textContent=p.temp+'°C';
+ document.getElementById('homeHumidityRow').textContent=p.humidity+'%';
+ document.getElementById('homeAQRow').textContent=p.aq;
+ document.getElementById('homeState').innerHTML=mode==='Comfort'?'<span class="on">● Comfort Mode ON</span> · <span class="off">Focus Mode OFF</span>':'<span class="off">● Comfort Mode OFF</span> · <span class="on">Focus Mode ON</span>';
+ document.getElementById('modeSummary').innerHTML='<span class="on">'+mode+' Mode ACTIVE</span>';
+ document.getElementById('homeInsightTitle').textContent=p.insight;
+ document.getElementById('homeInsightText').textContent=p.text;
+ document.getElementById('controlMode').textContent=mode+' Mode';
+ document.getElementById('controlText').textContent=p.control;
+ document.getElementById('controlState').innerHTML='<span class="on">● '+mode+' Mode ACTIVE</span>';
+ document.getElementById('airVal').textContent=air+'%';
+ document.getElementById('airSlider').value=air;
+ document.getElementById('deviceMode').textContent=mode;
+ document.getElementById('deviceAir').textContent=air+'%';
+ document.getElementById('deviceNoise').textContent=n;
+ document.getElementById('energyNow').textContent=e+' kWh/h';
+ document.getElementById('energyDescription').textContent=mode+' Mode • '+air+'% airflow';
+ document.getElementById('energyMode').textContent=mode;
+ document.getElementById('energyAir').textContent=air+'%';
+ document.getElementById('energyUse').textContent=e+' kWh/h';
+ document.getElementById('energyInsight').textContent=p.insight;
+ document.getElementById('energyInsightText').textContent=p.text;
+}
+update();
+</script></body></html>
